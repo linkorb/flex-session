@@ -2,7 +2,6 @@
 
 namespace FlexSession;
 
-use FlexSession\Type\File\FileSessionHandlerFactory;
 use FlexSession\Type\SessionHandlerFactoryInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\AbstractSessionHandler;
 
@@ -13,24 +12,40 @@ use Symfony\Component\HttpFoundation\Session\Storage\Handler\AbstractSessionHand
  */
 class FlexSessionHandlerFactory
 {
+    /** @var SessionHandlerFactoryInterface[] */
+    protected $factories = [];
+
+    protected $typeProvider;
+
+    public function __construct(FlexSessionTypeProviderInterface $typeProvider)
+    {
+        $this->typeProvider = $typeProvider;
+    }
+
+    public function addType($typeKey, SessionHandlerFactoryInterface $userFactory)
+    {
+        if (array_key_exists($typeKey, $this->factories)) {
+            throw new \InvalidArgumentException(sprintf('Flex session type "%s" was added already', $typeKey));
+        }
+
+        $this->factories[$typeKey] = $userFactory;
+    }
+
     /**
      * Create by current flex session type. Usually from env
      */
     public function create(): AbstractSessionHandler
     {
-        $type = 'file';
+        $type = $this->typeProvider->provide();
 
-        $factory = $this->createTypeFactory($type);
-        $params = []; // TODO resolve params
+        $factory = $this->createTypeFactory($type['type']);
+        $params = $type; // TODO resolve params
 
         return $factory->create($params);
     }
 
     public function createTypeFactory($type): SessionHandlerFactoryInterface
     {
-        // TODO resolve factory
-        $factory = new FileSessionHandlerFactory();
-
-        return $factory;
+        return $this->factories[$type];
     }
 }

@@ -10,7 +10,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "FlexSessionTest\\": "tests/FlexSessionTest"
+      "FlexSessionTest\\": "tests"
     }
   },
   "require": {

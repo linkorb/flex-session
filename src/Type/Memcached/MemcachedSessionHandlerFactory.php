@@ -1,6 +1,6 @@
 <?php
 
-namespace FlexSession\Type\File;
+namespace FlexSession\Type\Memcached;
 
 use FlexSession\Type\SessionHandlerFactoryInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\AbstractSessionHandler;
