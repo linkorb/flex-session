@@ -1,5 +1,5 @@
 # FlexSession
-FlexSession: .env configurable session backends 
+FlexSession: .env configurable session backends
 
 Run tests
 ```
