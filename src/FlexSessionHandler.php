@@ -21,16 +21,12 @@ class FlexSessionHandler extends AbstractSessionHandler
         $this->handler = $this->sessionHandlerFactory->create();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function open($savePath, $sessionName)
     {
         parent::open($savePath, $sessionName);
 
         return $this->handler->open($savePath, $sessionName);
     }
-
 
     protected function doRead($sessionId)
     {
@@ -64,18 +60,6 @@ class FlexSessionHandler extends AbstractSessionHandler
 
     protected function getDecoratedHandler(): AbstractSessionHandler
     {
-        if (!$this->handler) {
-            $this->handler = $this->sessionHandlerFactory->create();
-        }/* else {
-            $shouldSwitch = true;
-
-            if ($shouldSwitch) {
-                $this->handler->close();
-                $this->handler = $this->sessionHandlerFactory->create();
-            }
-        }*/
-
         return $this->handler;
     }
-    
 }

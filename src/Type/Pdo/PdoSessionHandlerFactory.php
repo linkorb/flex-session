@@ -14,27 +14,25 @@ class PdoSessionHandlerFactory implements SessionHandlerFactoryInterface
 {
     public function create(array $params): AbstractSessionHandler
     {
-        return new PdoSessionHandler($this->createPdo($params));
+        $options = [
+            'db_table' => $params['table'] ?? 'session',
+        ];
+
+        $pdoSessionHandler =  new PdoSessionHandler($this->createPdo($params), $options);
+        $pdoSessionHandler->createTable();
+
+        return $pdoSessionHandler;
     }
 
     private function createPdo($params)
     {
         // TODO PdoFactory
-
-        if (!isset($params['username'])) {
-            throw new \InvalidArgumentException(); // TODO custom own exception
-        }
-
-        if (!isset($params['password'])) {
+        if (!isset($params['dsn'])) {
             throw new \InvalidArgumentException();
         }
 
-        if (!isset($params['dns'])) {
-            throw new \InvalidArgumentException();
-        }
-
-        $dns = $params['dns'];
-        $pdo = new \PDO($dns, $params['username'], $params['password']);
+        $pdo = new \PDO($params['dsn']);
+        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
         return $pdo;
     }

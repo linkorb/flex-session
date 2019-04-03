@@ -33,20 +33,7 @@ class FlexSessionTest extends TestCase
         $this->assertEquals('value', $session->get('_test'));
     }
 
-    private function createFlexSessionHandler(FlexSessionTypeProvider $typeProvider)
-    {
-        $handlerFactory = new FlexSessionHandlerFactory($typeProvider);
-        $handlerFactory->addType('file', new FileSessionHandlerFactory());
-        $handlerFactory->addType('memcached', new MemcachedSessionHandlerFactory());
-        $handlerFactory->addType('pdo', new PdoSessionHandlerFactory());
-
-
-        $handler = new FlexSessionHandler($handlerFactory);
-
-        return $handler;
-    }
-
-    public function testFlexSession()
+    public function testFileFlexSession()
     {
         $typeProvider = new FlexSessionTypeProvider();
         $typeProvider->type = ['type' => 'file'];
@@ -58,8 +45,8 @@ class FlexSessionTest extends TestCase
         $session->start();
         $this->assertNotNull($session->getId());
         $this->assertNull($session->get('something'));
-        session_id('nullsessionstorage');
-        $this->assertEquals('nullsessionstorage', $session->getId());
+        session_id('sessionid');
+        $this->assertEquals('sessionid', $session->getId());
 
         // $storage->setSaveHandler($handler);
 
@@ -67,10 +54,10 @@ class FlexSessionTest extends TestCase
         $this->assertEquals('value', $session->get('_test'));
     }
 
-    public function testMemcachedFlexSession()
+    public function testPdoFlexSession()
     {
         $typeProvider = new FlexSessionTypeProvider();
-        $typeProvider->type = ['type' => 'memcached'];
+        $typeProvider->type = ['type' => 'pdo', 'dsn' => 'sqlite::memory:'];
 
         $handler = $this->createFlexSessionHandler($typeProvider);
 
@@ -80,12 +67,25 @@ class FlexSessionTest extends TestCase
         $session->start();
         $this->assertNotNull($session->getId());
         $this->assertNull($session->get('something'));
-        session_id('nullsessionstorage');
-        $this->assertEquals('nullsessionstorage', $session->getId());
+        session_id('sessionid');
+        $this->assertEquals('sessionid', $session->getId());
 
         // $storage->setSaveHandler($handler);
 
         $session->set('_test', 'value');
         $this->assertEquals('value', $session->get('_test'));
+    }
+
+    private function createFlexSessionHandler(FlexSessionTypeProvider $typeProvider): FlexSessionHandler
+    {
+        $handlerFactory = new FlexSessionHandlerFactory($typeProvider);
+        $handlerFactory->addType('file', new FileSessionHandlerFactory());
+        $handlerFactory->addType('memcached', new MemcachedSessionHandlerFactory());
+        $handlerFactory->addType('pdo', new PdoSessionHandlerFactory());
+
+
+        $handler = new FlexSessionHandler($handlerFactory);
+
+        return $handler;
     }
 }
