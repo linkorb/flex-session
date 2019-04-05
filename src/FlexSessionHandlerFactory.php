@@ -2,6 +2,7 @@
 
 namespace FlexSession;
 
+use FlexSession\TypeProvider\TypeProviderInterface;
 use FlexSession\Type\SessionHandlerFactoryInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\AbstractSessionHandler;
 
@@ -17,7 +18,7 @@ class FlexSessionHandlerFactory
 
     protected $typeProvider;
 
-    public function __construct(FlexSessionTypeProviderInterface $typeProvider)
+    public function __construct(TypeProviderInterface $typeProvider)
     {
         $this->typeProvider = $typeProvider;
     }

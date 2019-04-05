@@ -4,10 +4,10 @@ namespace FlexSessionTest;
 
 use FlexSession\FlexSessionHandler;
 use FlexSession\FlexSessionHandlerFactory;
+use FlexSession\TypeProvider\SimpleProvider;
 use FlexSession\Type\File\FileSessionHandlerFactory;
 use FlexSession\Type\Memcached\MemcachedSessionHandlerFactory;
 use FlexSession\Type\Pdo\PdoSessionHandlerFactory;
-use FlexSessionTest\Stubs\FlexSessionTypeProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler;
@@ -35,7 +35,7 @@ class FlexSessionTest extends TestCase
 
     public function testFileFlexSession()
     {
-        $typeProvider = new FlexSessionTypeProvider();
+        $typeProvider = new SimpleProvider();
         $typeProvider->type = ['type' => 'file'];
 
         $handler = $this->createFlexSessionHandler($typeProvider);
@@ -56,7 +56,7 @@ class FlexSessionTest extends TestCase
 
     public function testPdoFlexSession()
     {
-        $typeProvider = new FlexSessionTypeProvider();
+        $typeProvider = new SimpleProvider();
         $typeProvider->type = ['type' => 'pdo', 'dsn' => 'sqlite::memory:'];
 
         $handler = $this->createFlexSessionHandler($typeProvider);
@@ -76,7 +76,7 @@ class FlexSessionTest extends TestCase
         $this->assertEquals('value', $session->get('_test'));
     }
 
-    private function createFlexSessionHandler(FlexSessionTypeProvider $typeProvider): FlexSessionHandler
+    private function createFlexSessionHandler(SimpleProvider $typeProvider): FlexSessionHandler
     {
         $handlerFactory = new FlexSessionHandlerFactory($typeProvider);
         $handlerFactory->addType('file', new FileSessionHandlerFactory());

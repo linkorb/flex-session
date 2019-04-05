@@ -1,12 +1,12 @@
 <?php
 
-namespace FlexSession;
+namespace FlexSession\TypeProvider;
 
 /**
- * Class FlexSessionTypeProviderInterface
+ * Class TypeProviderInterface
  * @author Aleksandr Arofikin <sashaaro@gmail.com>
  */
-interface FlexSessionTypeProviderInterface
+interface TypeProviderInterface
 {
     /**
      * Return arrays with required key "type"
