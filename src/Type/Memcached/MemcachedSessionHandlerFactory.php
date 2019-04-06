@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\Session\Storage\Handler\MemcachedSessionHan
  */
 class MemcachedSessionHandlerFactory implements SessionHandlerFactoryInterface
 {
+    const TYPE = 'memcached';
+
     public function create(array $params): AbstractSessionHandler
     {
         return new MemcachedSessionHandler($this->createClient($params));
@@ -19,7 +21,7 @@ class MemcachedSessionHandlerFactory implements SessionHandlerFactoryInterface
 
     private function createClient(array $params)
     {
-        // TODO MemcachedClientFactory
+        // TODO inject MemcachedClientFactory through constructor
 
         $memcached = new \Memcached();
 
