@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Session\Storage\Handler\StrictSessionHandle
  */
 class FileSessionHandlerFactory implements SessionHandlerFactoryInterface
 {
+    const TYPE = 'file';
+
     public function create(array $params): AbstractSessionHandler
     {
         $path = $params['path'] ?? null;
