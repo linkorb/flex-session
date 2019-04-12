@@ -12,7 +12,11 @@ class FlexSessionHandler extends AbstractSessionHandler
 {
     /** @var FlexSessionHandlerFactory */
     private $sessionHandlerFactory;
-    /** @var AbstractSessionHandler */
+
+    /**
+     * Decorated session handler
+     * @var AbstractSessionHandler
+     */
     private $handler;
 
     public function __construct(FlexSessionHandlerFactory $sessionHandlerFactory)
@@ -30,36 +34,31 @@ class FlexSessionHandler extends AbstractSessionHandler
 
     protected function doRead($sessionId)
     {
-        return $this->getDecoratedHandler()->doRead($sessionId);
+        return $this->handler->doRead($sessionId);
     }
 
     protected function doWrite($sessionId, $data)
     {
-        return $this->getDecoratedHandler()->doWrite($sessionId, $data);
+        return $this->handler->doWrite($sessionId, $data);
     }
 
     protected function doDestroy($sessionId)
     {
-        return $this->getDecoratedHandler()->doDestroy($sessionId);
+        return $this->handler->doDestroy($sessionId);
     }
 
     public function close()
     {
-        return $this->getDecoratedHandler()->close();
+        return $this->handler->close();
     }
 
     public function gc($maxlifetime)
     {
-        return $this->getDecoratedHandler()->gc($maxlifetime);
+        return $this->handler->gc($maxlifetime);
     }
 
     public function updateTimestamp($session_id, $session_data)
     {
-        return $this->getDecoratedHandler()->updateTimestamp($session_id, $session_data);
-    }
-
-    protected function getDecoratedHandler(): AbstractSessionHandler
-    {
-        return $this->handler;
+        return $this->handler->updateTimestamp($session_id, $session_data);
     }
 }

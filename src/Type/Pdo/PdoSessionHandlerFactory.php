@@ -52,7 +52,10 @@ class PdoSessionHandlerFactory implements SessionHandlerFactoryInterface
             throw new \InvalidArgumentException();
         }
 
-        $pdo = new \PDO($params['dsn']);
+        $username = $params['username'] ?? null;
+        $password = $params['password'] ?? null;
+
+        $pdo = new \PDO($params['dsn'], $username, $password);
         $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
         return $pdo;

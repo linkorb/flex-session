@@ -8,6 +8,7 @@ use FlexSession\TypeProvider\SimpleProvider;
 use FlexSession\Type\File\FileSessionHandlerFactory;
 use FlexSession\Type\Memcached\MemcachedSessionHandlerFactory;
 use FlexSession\Type\Pdo\PdoSessionHandlerFactory;
+use FlexSession\TypeProvider\TypeProviderFactory;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler;
@@ -48,8 +49,6 @@ class FlexSessionTest extends TestCase
         session_id('sessionid');
         $this->assertEquals('sessionid', $session->getId());
 
-        // $storage->setSaveHandler($handler);
-
         $session->set('_test', 'value');
         $this->assertEquals('value', $session->get('_test'));
     }
@@ -69,11 +68,23 @@ class FlexSessionTest extends TestCase
         $this->assertNull($session->get('something'));
         session_id('sessionid');
         $this->assertEquals('sessionid', $session->getId());
-
-        // $storage->setSaveHandler($handler);
-
         $session->set('_test', 'value');
         $this->assertEquals('value', $session->get('_test'));
+    }
+
+    public function testResolveParamsFromLine()
+    {
+        $dsn = 'mysql:host=localhost;dbname=testdb';
+        $line = "pdo?dsn=$dsn&username=x&password=y&table=session_table";
+        $params = TypeProviderFactory::resolveParamsFromLine($line);
+
+        $this->assertEquals([
+            'type' => 'pdo',
+            'dsn' => $dsn,
+            'username' => 'x',
+            'password' => 'y',
+            'table' => 'session_table'
+        ], $params);
     }
 
     private function createFlexSessionHandler(SimpleProvider $typeProvider): FlexSessionHandler

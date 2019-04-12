@@ -6,7 +6,6 @@ use FlexSession\TypeProvider\TypeProviderInterface;
 use FlexSession\Type\SessionHandlerFactoryInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\AbstractSessionHandler;
 
-
 /**
  * Class FlexSessionHandlerFactory
  * @author Aleksandr Arofikin <sashaaro@gmail.com>
@@ -37,10 +36,8 @@ class FlexSessionHandlerFactory
      */
     public function create(): AbstractSessionHandler
     {
-        $type = $this->typeProvider->provide();
-
-        $factory = $this->createTypeFactory($type['type']);
-        $params = $type; // TODO resolve params
+        $params = $this->typeProvider->provide();
+        $factory = $this->createTypeFactory($params['type']);
 
         return $factory->create($params);
     }
